@@ -1,7 +1,7 @@
 package com.safina.shoppingcart.service.category;
 
 import com.safina.shoppingcart.exceptions.AlreadyExistsException;
-import com.safina.shoppingcart.exceptions.ResurceNotFoundException;
+import com.safina.shoppingcart.exceptions.ResourceNotFoundException;
 import com.safina.shoppingcart.model.Category;
 import com.safina.shoppingcart.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(()->new ResurceNotFoundException("Category not found!"));
+                .orElseThrow(()->new ResourceNotFoundException("Category not found!"));
     }
 
     @Override
@@ -43,14 +43,14 @@ public class CategoryService implements ICategoryService {
         return Optional.ofNullable(getCategoryById(id)).map(oldCategory -> {
             oldCategory.setName(category.getName());
             return categoryRepository.save(oldCategory);
-        }).orElseThrow(()->new ResurceNotFoundException("Category not found"));
+        }).orElseThrow(()->new ResourceNotFoundException("Category not found"));
     }
 
     @Override
     public void deleteCategoryById(Long id) {
         categoryRepository.findById(id)
                 .ifPresentOrElse(categoryRepository::delete,()->{
-                    throw new ResurceNotFoundException("Category not found!");
+                    throw new ResourceNotFoundException("Category not found!");
                 });
     }
 }

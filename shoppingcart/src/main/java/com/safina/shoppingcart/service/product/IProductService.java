@@ -1,5 +1,6 @@
 package com.safina.shoppingcart.service.product;
 
+import com.safina.shoppingcart.dto.ProductDto;
 import com.safina.shoppingcart.model.Product;
 import com.safina.shoppingcart.request.AddProductRequest;
 import com.safina.shoppingcart.request.ProductUpdateRequest;
@@ -20,6 +21,7 @@ public interface IProductService {
     Long countProductsByBrandAndName(String brand, String name);
 
 
+    List<ProductDto> getConvertedProducts(List<Product> products);
 
-
+    ProductDto convertToDto(Product product);
 }

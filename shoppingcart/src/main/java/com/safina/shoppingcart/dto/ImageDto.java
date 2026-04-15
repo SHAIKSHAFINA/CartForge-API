@@ -2,8 +2,7 @@ package com.safina.shoppingcart.dto;
 import lombok.Data;
 @Data
 public class ImageDto {
-
-    private Long imageId;
-    private String imageName;
-    private String downloadURL;
+    private Long id;
+    private String fileName;
+    private String downloadUrl;
 }

@@ -1,5 +1,6 @@
 package com.safina.shoppingcart.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +21,7 @@ public class Category {
         this.name = name;
     }
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Product> Products;
 }
