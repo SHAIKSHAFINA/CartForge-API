@@ -2,7 +2,7 @@ package com.safina.shoppingcart.controller;
 
 import com.safina.shoppingcart.exceptions.ResourceNotFoundException;
 import com.safina.shoppingcart.model.Cart;
-import com.safina.shoppingcart.response.apiResponse;
+import com.safina.shoppingcart.response.ApiResponse;
 import com.safina.shoppingcart.service.cart.CartService;
 import com.safina.shoppingcart.service.cart.ICartService;
 import lombok.RequiredArgsConstructor;
@@ -20,32 +20,32 @@ public class CartController {
     private final ICartService cartService;
 
     @GetMapping("/{cartId}/my-cart")
-    public ResponseEntity<apiResponse> getCart(@PathVariable Long cartId){
+    public ResponseEntity<ApiResponse> getCart(@PathVariable Long cartId){
         try {
             Cart cart=cartService.getCart(cartId);
-            return ResponseEntity.ok(new apiResponse("Sucess" , cart));
+            return ResponseEntity.ok(new ApiResponse("Sucess" , cart));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND  ).body(new apiResponse(e.getMessage(), null));
+            return ResponseEntity.status(NOT_FOUND  ).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
     @DeleteMapping("/{cartId}/clear")
-    public ResponseEntity<apiResponse> clearCart(@PathVariable Long cartId){
+    public ResponseEntity<ApiResponse> clearCart(@PathVariable Long cartId){
         try {
             cartService.clearCart(cartId);
-            return  ResponseEntity.ok(new apiResponse("Clear CartSucess" , null));
+            return  ResponseEntity.ok(new ApiResponse("Clear CartSucess" , null));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND  ).body(new apiResponse(e.getMessage(), null));
+            return ResponseEntity.status(NOT_FOUND  ).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
-    @GetMapping("/{}/cart/total-price")
-    public ResponseEntity<apiResponse> getTotalAmount(@PathVariable Long cartId){
+    @GetMapping("/{cartId}/cart/total-price")
+    public ResponseEntity<ApiResponse> getTotalAmount(@PathVariable Long cartId){
         try {
             BigDecimal totalPrice=cartService.getTotalPrice(cartId);
-            return ResponseEntity.ok(new apiResponse("Sucess" , totalPrice));
+            return ResponseEntity.ok(new ApiResponse("Sucess" , totalPrice));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND  ).body(new apiResponse(e.getMessage(), null));
+            return ResponseEntity.status(NOT_FOUND  ).body(new ApiResponse(e.getMessage(), null));
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.safina.shoppingcart.service.cart;
 
 import com.safina.shoppingcart.model.Cart;
+import com.safina.shoppingcart.model.User;
 
 import java.math.BigDecimal;
 
@@ -9,5 +10,6 @@ public interface ICartService {
     void clearCart(Long id);
     BigDecimal getTotalPrice(Long id);
 
-    Long intializeNewCart();
+    Cart intializeNewCart(User user);
+    Cart getCartByUserId(Long userId);
 }

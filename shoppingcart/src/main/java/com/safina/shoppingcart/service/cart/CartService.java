@@ -3,12 +3,15 @@ package com.safina.shoppingcart.service.cart;
 import com.safina.shoppingcart.exceptions.ResourceNotFoundException;
 import com.safina.shoppingcart.model.Cart;
 import com.safina.shoppingcart.model.CartItem;
+import com.safina.shoppingcart.model.User;
 import com.safina.shoppingcart.repository.CartItemRepository;
 import com.safina.shoppingcart.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -16,7 +19,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CartService implements ICartService{
     private final CartRepository cartRespository;
     private final CartItemRepository cartItemRepository;
-    private final AtomicLong cartIdGenerator=new AtomicLong();
 
     @Override
     public Cart getCart(Long id) {
@@ -27,12 +29,14 @@ public class CartService implements ICartService{
         return cartRespository.save(cart);
     }
 
+    @Transactional
     @Override
     public void clearCart(Long id) {
         Cart cart=getCart(id);
         cartItemRepository.deleteAllByCartId(id);
-        cart.getItems().clear();
+        cart.clearCart();
         cartRespository.deleteById(id);
+
     }
 
     @Override
@@ -44,10 +48,18 @@ public class CartService implements ICartService{
     }
 
     @Override
-    public Long intializeNewCart(){
-        Cart newCart=new Cart();
-        Long newCartId=cartIdGenerator.incrementAndGet();
-        newCart.setId(newCartId);
-        return cartRespository.save(newCart).getId();
+    public Cart intializeNewCart(User user){
+        return Optional.ofNullable(getCartByUserId(user.getId()))
+                .orElseGet(()-> {
+                    Cart cart = new Cart();
+                    cart.setUser(user);
+                    return cartRespository.save(cart);
+                });
     }
+
+    @Override
+    public Cart getCartByUserId(Long userId){
+        return cartRespository.findByUserId(userId);
+    }
+
 }

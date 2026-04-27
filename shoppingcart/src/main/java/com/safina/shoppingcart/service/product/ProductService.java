@@ -2,6 +2,7 @@ package com.safina.shoppingcart.service.product;
 
 import com.safina.shoppingcart.dto.ImageDto;
 import com.safina.shoppingcart.dto.ProductDto;
+import com.safina.shoppingcart.exceptions.AlreadyExistsException;
 import com.safina.shoppingcart.exceptions.ResourceNotFoundException;
 import com.safina.shoppingcart.model.Category;
 import com.safina.shoppingcart.model.Image;
@@ -32,6 +33,10 @@ public class ProductService implements IProductService {
         // if yes, set it as new product cat
         //if no, the save it as a new category then set it as new product category.
 
+        if(productExists(request.getName() ,request.getBrand())){
+            throw new AlreadyExistsException(request.getBrand() +" "+request.getName()+" Already exists");
+        }
+
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(()->{
                     Category newCategory =new Category(request.getCategory().getName());
@@ -41,6 +46,11 @@ public class ProductService implements IProductService {
         request.setCategory(category);
         return productRepository.save(createProduct(request,category));
     }
+
+    private boolean productExists(String name, String brand){
+        return productRepository.existsByNameAndBrand(name,brand);
+    }
+
 
     private Product createProduct(AddProductRequest request , Category category) {
         return new Product(
